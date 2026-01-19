@@ -1,0 +1,28 @@
+[
+  {
+    "id": "1",
+    "name": "Admin",
+    "email": "admin@animax.com",
+    "password": "123",
+    "plan": "premium"
+  },
+  {
+    "id": "11e10f66-a0ca-4882-a67a-b49512b75f7c",
+    "name": "BLACK GOLD STUDIOS",
+    "email": "lucasnovaismartines@gmail.com",
+    "password": "XBOX2011",
+    "plan": "premium",
+    "avatarUrl": "https://ruttyrosasdodeserto.com.br/wp-content/uploads/2026/01/menina-veneno.jpeg",
+    "maxAgeRating": 16
+  },
+  {
+    "id": "ede4f9a7-a045-45ee-98ab-fffaeba4a9d8",
+    "name": "Simone",
+    "email": "smone271@gmail.com",
+    "password": "XBOX2011",
+    "plan": "basic",
+    "maxAgeRating": 16,
+    "emailVerified": false,
+    "verificationToken": "4b0522bf-4dbe-46ff-96d8-014cb22a7a43"
+  }
+]
