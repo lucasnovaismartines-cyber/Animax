@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Animax Streaming</string>
+    <string name="title_activity_main">Animax Streaming</string>
+    <string name="package_name">com.animax.streaming</string>
+    <string name="custom_url_scheme">com.animax.streaming</string>
+</resources>
