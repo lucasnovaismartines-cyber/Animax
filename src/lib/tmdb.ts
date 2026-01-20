@@ -570,6 +570,70 @@ export async function searchMovies(query: string, limit = 20): Promise<Content[]
   return mapped;
 }
 
+export async function getMoviesByGenre(genreId: number, page = 1, limit = 20): Promise<Content[]> {
+  if (!TMDB_API_KEY) return [];
+
+  const url = new URL(`${TMDB_BASE_URL}/discover/movie`);
+  url.searchParams.set("api_key", TMDB_API_KEY);
+  url.searchParams.set("language", "pt-BR");
+  url.searchParams.set("page", String(page));
+  url.searchParams.set("with_genres", String(genreId));
+  url.searchParams.set("sort_by", "popularity.desc");
+  url.searchParams.set("include_adult", "false");
+
+  const res = await fetch(url.toString());
+  if (!res.ok) return [];
+
+  const data = await res.json();
+  const results: TmdbMovie[] = data.results ?? [];
+
+  const mapped = await Promise.all(
+    results.slice(0, limit).map(async (movie) => {
+      const certification = await getMovieCertification(movie.id);
+      const ageRating = mapCertificationToAgeRating(
+        certification,
+        "movie",
+        movie.adult === true
+      );
+      return mapTmdbMovieToContent(movie, ageRating);
+    })
+  );
+
+  return mapped;
+}
+
+export async function getSeriesByGenre(genreId: number, page = 1, limit = 20): Promise<Content[]> {
+  if (!TMDB_API_KEY) return [];
+
+  const url = new URL(`${TMDB_BASE_URL}/discover/tv`);
+  url.searchParams.set("api_key", TMDB_API_KEY);
+  url.searchParams.set("language", "pt-BR");
+  url.searchParams.set("page", String(page));
+  url.searchParams.set("with_genres", String(genreId));
+  url.searchParams.set("sort_by", "popularity.desc");
+  url.searchParams.set("include_adult", "false");
+
+  const res = await fetch(url.toString());
+  if (!res.ok) return [];
+
+  const data = await res.json();
+  const results: TmdbTv[] = data.results ?? [];
+
+  const mapped = await Promise.all(
+    results.slice(0, limit).map(async (tv) => {
+      const certification = await getTvCertification(tv.id);
+      const ageRating = mapCertificationToAgeRating(
+        certification,
+        "tv",
+        tv.adult === true
+      );
+      return mapTmdbTvToContent(tv, "series", ageRating);
+    })
+  );
+
+  return mapped;
+}
+
 export async function getNewArrivals(limit = 10): Promise<Content[]> {
   if (!TMDB_API_KEY) return [];
 
