@@ -570,6 +570,60 @@ export async function searchMovies(query: string, limit = 20): Promise<Content[]
   return mapped;
 }
 
+export async function getNewArrivals(limit = 10): Promise<Content[]> {
+  if (!TMDB_API_KEY) return [];
+
+  // Fetch Movies (Now Playing)
+  const moviesUrl = new URL(`${TMDB_BASE_URL}/movie/now_playing`);
+  moviesUrl.searchParams.set("api_key", TMDB_API_KEY);
+  moviesUrl.searchParams.set("language", "pt-BR");
+  moviesUrl.searchParams.set("page", "1");
+
+  // Fetch Series (On The Air)
+  const seriesUrl = new URL(`${TMDB_BASE_URL}/tv/on_the_air`);
+  seriesUrl.searchParams.set("api_key", TMDB_API_KEY);
+  seriesUrl.searchParams.set("language", "pt-BR");
+  seriesUrl.searchParams.set("page", "1");
+
+  const [moviesRes, seriesRes] = await Promise.all([
+    fetch(moviesUrl.toString()),
+    fetch(seriesUrl.toString())
+  ]);
+
+  let movies: TmdbMovie[] = [];
+  let series: TmdbTv[] = [];
+
+  if (moviesRes.ok) {
+    const data = await moviesRes.json();
+    movies = data.results || [];
+  }
+
+  if (seriesRes.ok) {
+    const data = await seriesRes.json();
+    series = data.results || [];
+  }
+
+  // Map movies
+  const mappedMovies = await Promise.all(
+    movies.slice(0, Math.ceil(limit / 2)).map(async (movie) => {
+      const certification = await getMovieCertification(movie.id);
+      const ageRating = mapCertificationToAgeRating(certification, "movie", movie.adult === true);
+      return mapTmdbMovieToContent(movie, ageRating);
+    })
+  );
+
+  // Map series
+  const mappedSeries = await Promise.all(
+    series.slice(0, Math.ceil(limit / 2)).map(async (tv) => {
+      const certification = await getTvCertification(tv.id);
+      const ageRating = mapCertificationToAgeRating(certification, "tv", tv.adult === true);
+      return mapTmdbTvToContent(tv, "series", ageRating);
+    })
+  );
+
+  return [...mappedMovies, ...mappedSeries].slice(0, limit);
+}
+
 export async function searchSeries(query: string, limit = 20): Promise<Content[]> {
   if (!TMDB_API_KEY) {
     return [];
@@ -580,6 +634,7 @@ export async function searchSeries(query: string, limit = 20): Promise<Content[]
   url.searchParams.set("language", "pt-BR");
   url.searchParams.set("query", query);
   url.searchParams.set("page", "1");
+  url.searchParams.set("include_adult", "false");
 
   const res = await fetch(url.toString());
   if (!res.ok) return [];

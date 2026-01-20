@@ -1,8 +1,9 @@
 "use client";
 
 import Link from 'next/link';
-import { Search, Bell, User, LogOut } from 'lucide-react';
+import { Search, User, LogOut } from 'lucide-react';
 import { logout } from '@/app/actions/auth';
+import { NotificationDropdown } from './NotificationDropdown';
 
 export function Navbar() {
   return (
@@ -25,13 +26,19 @@ export function Navbar() {
           <Link href="/search" className="hover:text-cyan-400 transition-colors">
             <Search className="w-5 h-5" />
           </Link>
-          <button className="hover:text-violet-400 transition-colors relative">
-            <Bell className="w-5 h-5" />
-            <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-          </button>
+          
+          <NotificationDropdown />
           
           <div className="h-6 w-px bg-gray-800"></div>
+          
+          <Link href="/assinaturas">
+            <button className="hidden md:flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(245,158,11,0.5)]">
+              <span className="text-amber-100">👑</span>
+              SEJA PRO
+            </button>
+          </Link>
 
+          {/* User Menu */}
           <div className="flex items-center gap-4">
             <Link href="/profile">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-600 to-cyan-600 flex items-center justify-center text-white font-bold shadow-lg shadow-violet-900/30 ring-2 ring-black cursor-pointer">

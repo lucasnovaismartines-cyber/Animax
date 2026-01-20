@@ -42,6 +42,8 @@ export interface User {
   subscriptionPrice?: number | null;
   lastSubscriptionStatus?: string | null;
   lastPaymentMethod?: string | null;
+  verificationCode?: string | null;
+  verificationCodeExpires?: Date | null;
 }
 
 export async function getUsers(): Promise<User[]> {
@@ -66,6 +68,8 @@ export async function saveUser(user: User): Promise<void> {
       subscriptionPrice: user.subscriptionPrice,
       lastSubscriptionStatus: user.lastSubscriptionStatus,
       lastPaymentMethod: user.lastPaymentMethod,
+      verificationCode: user.verificationCode,
+      verificationCodeExpires: user.verificationCodeExpires,
     },
   });
 }
@@ -109,5 +113,7 @@ function toUserInterface(dbUser: any): User {
     subscriptionPrice: dbUser.subscriptionPrice,
     lastSubscriptionStatus: dbUser.lastSubscriptionStatus,
     lastPaymentMethod: dbUser.lastPaymentMethod,
+    verificationCode: dbUser.verificationCode,
+    verificationCodeExpires: dbUser.verificationCodeExpires,
   };
 }

@@ -109,7 +109,6 @@ export function VideoPlayer({
             className="w-full h-full"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
-            sandbox="allow-forms allow-scripts allow-same-origin allow-presentation"
           />
         )}
       </div>

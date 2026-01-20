@@ -24,7 +24,18 @@ model User {
   subscriptionPrice     Float?
   lastSubscriptionStatus String? // active, expired, payment_failed, canceled
   lastPaymentMethod     String?  // card, pix
+  verificationCode      String?
+  verificationCodeExpires DateTime?
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
+  messages              CommunityMessage[]
+}
+
+model CommunityMessage {
+  id        String   @id @default(uuid())
+  content   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
 
