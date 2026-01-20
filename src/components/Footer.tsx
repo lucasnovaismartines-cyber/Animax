@@ -46,7 +46,7 @@ export function Footer() {
       </div>
       
       <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-gray-800 text-center text-xs">
-        <p>&copy; 2024 Animax Inc. Todos os direitos reservados.</p>
+        <p>&copy; {new Date().getFullYear()} Animax Inc. Todos os direitos reservados.</p>
       </div>
     </footer>
   );
